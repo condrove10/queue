@@ -7,7 +7,6 @@ A high-performance, thread-safe FIFO (First-In-First-Out) queue implementation i
 ## Features
 
 - **Thread-safe**: All operations are protected by read-write mutexes
-- **Generic**: Supports any data type using Go generics
 - **Blocking reads**: `DequeueBlocking()` with context support for cancellation and timeouts
 - **Non-blocking reads**: `Dequeue()` for immediate operations
 - **High performance**: Optimized for minimal overhead and high throughput
@@ -33,7 +32,7 @@ import (
 
 func main() {
     // Create a new queue for strings
-    q := queue.New[string]()
+    q := queue.New()
     
     // Add some items
     q.Enqueue("hello")
@@ -54,7 +53,7 @@ func main() {
 
 ```go
 // Create a new queue for any type T
-q := queue.New[T]()
+q := queue.New()
 ```
 
 ### Adding Items
@@ -124,7 +123,7 @@ import (
 )
 
 func main() {
-    q := queue.New[int]()
+    q := queue.New()
     var wg sync.WaitGroup
     
     // Producer goroutine
@@ -175,7 +174,7 @@ import (
 )
 
 func main() {
-    q := queue.New[string]()
+    q := queue.New()
     
     // Try to dequeue with a 2-second timeout
     ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
@@ -213,7 +212,7 @@ type Task struct {
 }
 
 func main() {
-    q := queue.New[Task]()
+    q := queue.New()
     ctx, cancel := context.WithCancel(context.Background())
     var wg sync.WaitGroup
     
@@ -247,7 +246,7 @@ func main() {
     fmt.Println("All workers finished")
 }
 
-func worker(ctx context.Context, q *queue.Queue[Task], workerID int, wg *sync.WaitGroup) {
+func worker(ctx context.Context, q *queue.Queue, workerID int, wg *sync.WaitGroup) {
     defer wg.Done()
     
     for {
@@ -269,7 +268,6 @@ func worker(ctx context.Context, q *queue.Queue[Task], workerID int, wg *sync.Wa
 The queue defines custom errors:
 
 - `queue.ErrQueueClosed`: Returned when trying to enqueue to a closed queue
-- `queue.ErrQueueEmpty`: Returned in specific empty queue scenarios
 
 ```go
 err := q.Enqueue(item)
